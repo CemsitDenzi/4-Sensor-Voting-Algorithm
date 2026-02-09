@@ -6,7 +6,7 @@ clc; clear; close all;
 % 'case_7_bit.mat' , 'case_8_original_mixed.mat' , 'case_9_total_loss.mat'
 % 'case_10_range_survival.mat' , 'case_11_turbulence.mat'
 
-case_file = 'case_5_oscillatory.mat'; 
+case_file = 'case_11_turbulence.mat'; 
 
 % Dosyayı yükle
 if exist(['test_data/' case_file], 'file')
@@ -18,8 +18,8 @@ end
 
 %% Sim Params
 alpha = 0.98;
-persist_on_th = 2.5;
-persist_off_th = 1;
+persist_on_th = 3;
+persist_off_th = 2.5;
 instant_th = 2.0;
 osc_th = 2;
 osc_cross_th = 5;
@@ -105,10 +105,10 @@ for i = N + 1 : len
             active_s_current(s) = current_sigs(s);
             % If possibly oscillated signal exceeds threshold activate
             % error flag
+        end
             if sum(osc_counter(s, max(1, i-No) : i)) > osc_cross_th
                 osc_error_flag(s) = 1;
-            end
-        end
+            end        
 
         % Miscompare errors
         instant_err_s(s, i) = abs(active_s_current(s) - voted_val(i-1));
@@ -127,9 +127,6 @@ for i = N + 1 : len
         end
 
         % if all signals oscillates this means physical phenomena not error
-        if ~any(~osc_error_flag)
-            osc_error_flag = [0;0;0;0];
-        end
 
         % If total BIT error flags exceeds thres. activate error
         if (sum(BIT_flags(s, max(1, i-N) : i))) > BIT_flag_th
@@ -157,6 +154,13 @@ for i = N + 1 : len
             validity(s, i) = 1;
         end
     end
+    
+        if sum(osc_error_flag) == 4 && (~any(persist_miscompare_flag) && ~any(range_err_flag))
+            validity(:,i) = [1;1;1;1];
+            healing_cnt = [heal_t;heal_t;heal_t;heal_t];
+
+        end
+    
 
     %If there are 2 sensors left and one of them fails, otherone fails too
     if sum(validity(:,i)) == 1
