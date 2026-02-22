@@ -7,7 +7,7 @@ clc; clear; close all;
 % 'case_10_range_survival.mat' , 'case_11_turbulence.mat', case_12_split
 % 'case_13_reset.mat'
 
-case_file = 'case_13_reset.mat';
+case_file = 'case_12_split.mat';
 
 % Dosyayı yükle
 if exist(['test_data/' case_file], 'file')
@@ -352,25 +352,27 @@ end
 %% Plot Results
 figure(1);
 sgtitle(['RESULTS FOR: ' strrep(case_file, '_', '\_')]); 
-subplot(2,1,1)
+% subplot(2,1,1)
 plot(t, faded_val, 'LineWidth', 2); hold on;
 if ~isempty(fail_time), xline(fail_time*dt, "r--", 'LineWidth', 2); end
 if ~isempty(state_change_time), xline(state_change_time *dt, "g--");end
-ylim([-2 10]); grid on; title("Faded Voted Value"); 
+ylim([2 16]); grid on; title("Faded Voted Value"); 
 
-subplot(2,1,2)
+%Raw voted value
 % plot(t, voted_val, 'LineWidth', 2); hold on;
 % if ~isempty(fail_time), xline(fail_time*dt, "r--", 'LineWidth', 2); end
 % if ~isempty(state_change_time), xline(state_change_time *dt, "g--");end
 % ylim([-2 18]); grid on; title("Raw Voted Value");
 
-plot(t,quality,"LineWidth",3);
-title("Value Quality")
-grid on
+%Value Quality
+% plot(t,quality,"LineWidth",3);
+% title("Value Quality")
+% ylim([-1 5]);
+% grid on
 
 %Comment out for other cases except 12
-% plot(t,sig1,'Color',[0.8 0.8 0.8]);plot(t,sig2,'Color',[0.8 0.8 0.8]);plot(t,sig3,'Color',[0.8 0.8 0.8]);plot(t,sig4,'Color',[0.8 0.8 0.8]);
-% xline(3657 *dt, "g--")
+plot(t,sig1,'b--');plot(t,sig2,'b--');plot(t,sig3,'b--');plot(t,sig4,'b--');
+xline(3657 *dt, "g--")
 
 
 figure(2); sgtitle("Signal Validities");
@@ -378,14 +380,12 @@ titles = ["Signal 1 Validity", "Signal 2 Validity", "Signal 3 Validity", "Signal
 for s=1:4, subplot(2,2,s); plot(t, validity(s,:), 'LineWidth', 2); ylim([-0.5 1.5]); title(titles(s)); end
 
 figure(3); sgtitle("Input Signals");
-subplot(2,2,1); plot(t, sig1, 'LineWidth', 2); title('Signal 1'); grid on;
-subplot(2,2,2); plot(t, sig2, 'LineWidth', 2); title('Signal 2'); grid on;
-subplot(2,2,3); plot(t, sig3, 'LineWidth', 2); title('Signal 3'); grid on;
-subplot(2,2,4); plot(t, sig4, 'LineWidth', 2); title('Signal 4'); grid on;
+subplot(2,2,1); plot(t, sig1, 'LineWidth', 2); title('Signal 1'); grid on;ylim([1 16]);
+subplot(2,2,2); plot(t, sig2, 'LineWidth', 2); title('Signal 2'); grid on;ylim([1 16]);
+subplot(2,2,3); plot(t, sig3, 'LineWidth', 2); title('Signal 3'); grid on;ylim([1 16]);
+subplot(2,2,4); plot(t, sig4, 'LineWidth', 2); title('Signal 4'); grid on;ylim([1 16]);
 
 
-figure(4)
 
-plot(t,dummy_hist)
 
 

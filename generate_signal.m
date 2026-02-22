@@ -21,7 +21,9 @@ sig2 = base_sig2;
 sig3 = base_sig3; 
 sig4 = base_sig4;
 BIT_flags = zeros(4, len);
-save('test_data/case_1_nominal.mat', 't', 'dt', 'sig1', 'sig2', 'sig3', 'sig4', 'BIT_flags');
+reset_button = zeros(len);
+
+save('test_data/case_1_nominal.mat', 't', 'dt', 'sig1', 'sig2', 'sig3', 'sig4', 'BIT_flags','reset_button');
 
 
 figure('Name', 'CASE 1: Nominal', 'NumberTitle', 'off');
@@ -34,11 +36,12 @@ subplot(2,2,4); plot(t, sig4, 'LineWidth', 1.5); grid on; title('Signal 4'); yli
 %% CASE 2: Instantaneous Miscompare (Anlık Uyumsuzluk)
 sig1 = base_sig1; sig2 = base_sig2; sig3 = base_sig3; sig4 = base_sig4;
 BIT_flags = zeros(4, len);
+reset_button = zeros(len);
 
 spike_idx = round(10/dt); 
 sig2(spike_idx : spike_idx+5) = 8; 
 
-save('test_data/case_2_instant.mat', 't', 'dt', 'sig1', 'sig2', 'sig3', 'sig4', 'BIT_flags');
+save('test_data/case_2_instant.mat', 't', 'dt', 'sig1', 'sig2', 'sig3', 'sig4', 'BIT_flags','reset_button');
 
 figure('Name', 'CASE 2: Instantaneous', 'NumberTitle', 'off');
 sgtitle('CASE 2: Anlık Uyumsuzluk (Spike @ 10s)');
@@ -50,13 +53,15 @@ subplot(2,2,4); plot(t, sig4, 'LineWidth', 1.5); grid on; title('Signal 4'); yli
 %% CASE 3: Persistent Miscompare (Drift)
 sig1 = base_sig1; sig2 = base_sig2; sig3 = base_sig3; sig4 = base_sig4;
 BIT_flags = zeros(4, len);
+reset_button = zeros(len);
+
 
 drift_start = round(25/dt);
 drift_end = round(35/dt);
 sig2(drift_start : drift_end) = linspace(3.2, 15, (drift_end - drift_start + 1));
 sig2(drift_end+1 : end) = 3.2; 
 
-save('test_data/case_3_persistent.mat', 't', 'dt', 'sig1', 'sig2', 'sig3', 'sig4', 'BIT_flags');
+save('test_data/case_3_persistent.mat', 't', 'dt', 'sig1', 'sig2', 'sig3', 'sig4', 'BIT_flags','reset_button');
 
 figure('Name', 'CASE 3: Persistent', 'NumberTitle', 'off');
 sgtitle('CASE 3: Kalıcı Uyumsuzluk (Drift 5s-15s)');
@@ -68,11 +73,13 @@ subplot(2,2,4); plot(t, sig4, 'LineWidth', 1.5); grid on; title('Signal 4'); yli
 %% CASE 4: Range Check (Hardover)
 sig1 = base_sig1; sig2 = base_sig2; sig3 = base_sig3; sig4 = base_sig4;
 BIT_flags = zeros(4, len);
+reset_button = zeros(len);
+
 
 fail_time = round(10/dt);
 sig1(fail_time:end) = 100; 
 
-save('test_data/case_4_range.mat', 't', 'dt', 'sig1', 'sig2', 'sig3', 'sig4', 'BIT_flags');
+save('test_data/case_4_range.mat', 't', 'dt', 'sig1', 'sig2', 'sig3', 'sig4', 'BIT_flags','reset_button');
 
 figure('Name', 'CASE 4: Range Check', 'NumberTitle', 'off');
 sgtitle('CASE 4: Range Hatası (Hardover @ 10s)');
@@ -84,13 +91,15 @@ subplot(2,2,4); plot(t, sig4, 'LineWidth', 1.5); grid on; title('Signal 4'); yli
 %% CASE 5: Oscillatory Fault (Osilasyon)
 sig1 = base_sig1; sig2 = base_sig2; sig3 = base_sig3; sig4 = base_sig4;
 BIT_flags = zeros(4, len);
+reset_button = zeros(len);
+
 
 osc_start = round(10/dt);
 osc_time_vec = t(osc_start:end) - t(osc_start);
 oscillation = 3 * sin(22 * osc_time_vec); 
 sig3(osc_start:end) = sig3(osc_start:end) + oscillation;
 
-save('test_data/case_5_oscillatory.mat', 't', 'dt', 'sig1', 'sig2', 'sig3', 'sig4', 'BIT_flags');
+save('test_data/case_5_oscillatory.mat', 't', 'dt', 'sig1', 'sig2', 'sig3', 'sig4', 'BIT_flags','reset_button');
 
 figure('Name', 'CASE 5: Oscillatory', 'NumberTitle', 'off');
 sgtitle('CASE 5: Osilasyon Hatası (15 rad/s @ 10s)');
@@ -102,12 +111,14 @@ subplot(2,2,4); plot(t, sig4, 'LineWidth', 1.5); grid on; title('Signal 4'); yli
 %% CASE 6: Healing (İyileşme)
 sig1 = base_sig1; sig2 = base_sig2; sig3 = base_sig3; sig4 = base_sig4;
 BIT_flags = zeros(4, len);
+reset_button = zeros(len);
+
 
 fail_start = round(5/dt);
 fail_end = round(20/dt); 
 sig2(fail_start : fail_end) = 8; 
 
-save('test_data/case_6_healing.mat', 't', 'dt', 'sig1', 'sig2', 'sig3', 'sig4', 'BIT_flags');
+save('test_data/case_6_healing.mat', 't', 'dt', 'sig1', 'sig2', 'sig3', 'sig4', 'BIT_flags','reset_button');
 
 figure('Name', 'CASE 6: Healing', 'NumberTitle', 'off');
 sgtitle('CASE 6: İyileşme (Arıza 5s-20s)');
@@ -119,12 +130,13 @@ subplot(2,2,4); plot(t, sig4, 'LineWidth', 1.5); grid on; title('Signal 4'); yli
 %% CASE 7: Flagged Fault (BIT Hatası)
 sig1 = base_sig1; sig2 = base_sig2; sig3 = base_sig3; sig4 = base_sig4;
 BIT_flags = zeros(4, len);
+reset_button = zeros(len);
 
 bit_start = round(10/dt);
 bit_end = round(25/dt);
 BIT_flags(4, bit_start:bit_end) = 1; 
 
-save('test_data/case_7_bit.mat', 't', 'dt', 'sig1', 'sig2', 'sig3', 'sig4', 'BIT_flags');
+save('test_data/case_7_bit.mat', 't', 'dt', 'sig1', 'sig2', 'sig3', 'sig4', 'BIT_flags','reset_button');
 
 figure('Name', 'CASE 7: BIT Fault', 'NumberTitle', 'off');
 sgtitle('CASE 7: BIT Hatası (Sinyal 4 @ 10s-25s)');
@@ -170,6 +182,8 @@ subplot(2,2,4); plot(t, sig4, 'LineWidth', 1.5); grid on; title('Signal 4 (Healt
 
 sig1 = base_sig1; sig2 = base_sig2; sig3 = base_sig3; sig4 = base_sig4;
 BIT_flags = zeros(4, len);
+reset_button = zeros(len);
+
 
 step_fail_time = round(5/dt);
 sig1(step_fail_time : end) = 15.0; 
@@ -178,7 +192,7 @@ sig2(step_fail_time : end) = 20.0;
 drift_start = round(15/dt);
 sig3(drift_start : end) = linspace(3.0, 20.0, len - drift_start + 1);
 
-save('test_data/case_9_total_loss.mat', 't', 'dt', 'sig1', 'sig2', 'sig3', 'sig4', 'BIT_flags');
+save('test_data/case_9_total_loss.mat', 't', 'dt', 'sig1', 'sig2', 'sig3', 'sig4', 'BIT_flags','reset_button');
 
 
 figure('Name', 'CASE 9: Total Loss', 'NumberTitle', 'off');
@@ -193,6 +207,7 @@ subplot(2,2,4); plot(t, sig4, 'g', 'LineWidth', 1.5); grid on; title('Signal 4 (
 
 sig1 = base_sig1; sig2 = base_sig2; sig3 = base_sig3; sig4 = base_sig4;
 BIT_flags = zeros(4, len);
+reset_button = zeros(len);
 
 step_fail_time = round(5/dt);
 sig1(step_fail_time : end) = 18.0; 
@@ -201,7 +216,7 @@ sig2(step_fail_time : end) = 22.0;
 range_fail_time = round(20/dt);
 sig3(range_fail_time : end) = 150; 
 
-save('test_data/case_10_range_survival.mat', 't', 'dt', 'sig1', 'sig2', 'sig3', 'sig4', 'BIT_flags');
+save('test_data/case_10_range_survival.mat', 't', 'dt', 'sig1', 'sig2', 'sig3', 'sig4', 'BIT_flags','reset_button');
 
 figure('Name', 'CASE 10: Range Survival', 'NumberTitle', 'off');
 sgtitle('CASE 10: 2 Step Hatası (@5s) + 3. Range Hatası (@20s)');
@@ -213,6 +228,8 @@ subplot(2,2,4); plot(t, sig4, 'g', 'LineWidth', 1.5); grid on; title('Signal 4 (
 %% CASE 11: All Signals Oscillating (Turbulence/Common Mode)
 sig1 = base_sig1; sig2 = base_sig2; sig3 = base_sig3; sig4 = base_sig4;
 BIT_flags = zeros(4, len);
+reset_button = zeros(len);
+
 
 turb_start = round(5/dt);
 turb_freq = 15; 
@@ -223,7 +240,7 @@ sig2(turb_start:end) = sig2(turb_start:end) + turbulence;
 sig3(turb_start:end) = sig3(turb_start:end) + turbulence;
 sig4(turb_start:end) = sig4(turb_start:end) + turbulence;
 
-save('test_data/case_11_turbulence.mat', 't', 'dt', 'sig1', 'sig2', 'sig3', 'sig4', 'BIT_flags');
+save('test_data/case_11_turbulence.mat', 't', 'dt', 'sig1', 'sig2', 'sig3', 'sig4', 'BIT_flags','reset_button');
 
 figure('Name', 'CASE 11: Turbulence', 'NumberTitle', 'off');
 sgtitle('CASE 11: Tüm Sinyaller Osile (Türbülans)');
@@ -235,6 +252,8 @@ subplot(2,2,4); plot(t, sig4, 'LineWidth', 1); grid on; title('Signal 4'); ylim(
 %% CASE 12: All Signals Drifts
 sig1 = base_sig1; sig2 = base_sig2; sig3 = base_sig3; sig4 = base_sig4;
 BIT_flags = zeros(4, len);
+reset_button = zeros(len);
+
 
 
 drift_time = 30 / dt;
@@ -244,7 +263,7 @@ sig2(drift_time : end) = linspace(3.2 , 15, length(sig1(drift_time : end)));
 sig3(drift_time : end) = linspace(3.0 , 7, length(sig1(drift_time : end)));
 sig4(drift_time : end) = linspace(2.9 , 8, length(sig1(drift_time : end)));
 
-save('test_data/case_12_split.mat', 't', 'dt', 'sig1', 'sig2', 'sig3', 'sig4', 'BIT_flags');
+save('test_data/case_12_split.mat', 't', 'dt', 'sig1', 'sig2', 'sig3', 'sig4', 'BIT_flags','reset_button');
 
 
 figure('Name', 'CASE 12: 2by2 Split', 'NumberTitle', 'off');
